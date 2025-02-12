@@ -16,6 +16,8 @@ app.use(bodyParser.json());
 
 // 📌 Exibir variáveis de ambiente carregadas
 console.log("🔍 Verificando variáveis de ambiente...");
+console.log("🔍 TODAS AS VARIÁVEIS DE AMBIENTE DISPONÍVEIS NO RAILWAY:");
+console.log(process.env);
 console.log("🟢 BREVO_API_KEY:", process.env.BREVO_API_KEY ? "Carregada ✅" : "❌ NÃO CARREGADA!");
 console.log("🟢 SMTP_EMAIL:", process.env.SMTP_EMAIL ? process.env.SMTP_EMAIL : "❌ NÃO CARREGADO!");
 console.log("📜 TODAS AS VARIÁVEIS DO PROCESS.ENV:", process.env);
