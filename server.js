@@ -27,10 +27,10 @@ const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 // 📌 Função para enviar e-mails com logs detalhados
 async function enviarEmail(assunto, conteudoEmail) {
   console.log("🔍 Verificando chave da API antes do envio...");
-  console.log("🟢 Chave da API usada:", process.env.BREVO_API_KEY ? "Carregada ✅" : "❌ NÃO ENCONTRADA");
+  console.log("🟢 Chave da API usada:", process.env.BREVO_API_KEY);
 
-  const remetente = process.env.SMTP_EMAIL || "remetente@exemplo.com"; // Evita valores indefinidos
-  const destinatario = "atendimento@altimuscorretora.com.br"; // E-mail fixo de destino
+  const remetente = process.env.SMTP_EMAIL || "remetente@exemplo.com";
+  const destinatario = "atendimento@altimuscorretora.com.br";
 
   const sendSmtpEmail = {
     sender: { email: remetente, name: "Altimus Corretora" },
@@ -48,6 +48,7 @@ async function enviarEmail(assunto, conteudoEmail) {
     return response;
   } catch (error) {
     console.error("❌ Erro ao enviar e-mail:", error.response?.data || error.message);
+    console.error("🔴 Resposta completa da Brevo:", JSON.stringify(error.response?.data || error.message, null, 2));
     console.error("🔴 Verifique se `BREVO_API_KEY` e `SMTP_EMAIL` estão corretos!");
     throw new Error("Erro ao enviar e-mail");
   }
