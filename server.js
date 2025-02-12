@@ -6,9 +6,6 @@ require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor rodando na porta ${PORT}`);
-});
 
 // 📌 Middleware
 app.use(cors({ origin: "*", methods: ["GET", "POST"], allowedHeaders: ["Content-Type"] }));
@@ -23,24 +20,23 @@ const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
 // 📌 Função para enviar e-mails
 async function enviarEmail(assunto, conteudoEmail) {
-    const sendSmtpEmail = {
-      sender: { email: process.env.SMTP_EMAIL, name: "Altimus Corretora" },
-      to: [{ email: "atendimento@altimuscorretora.com.br" }], 
-      subject: assunto,
-      htmlContent: conteudoEmail
-    };
-  
-    try {
-      console.log("📤 Tentando enviar e-mail...");
-      const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
-      console.log("✅ Resposta da Brevo:", JSON.stringify(response, null, 2));
-      return response;
-    } catch (error) {
-      console.error("❌ Erro ao enviar e-mail:", error.response?.data || error.message);
-      throw new Error("Erro ao enviar e-mail");
-    }
+  const sendSmtpEmail = {
+    sender: { email: process.env.SMTP_EMAIL, name: "Altimus Corretora" },
+    to: [{ email: "atendimento@altimuscorretora.com.br" }], 
+    subject: assunto,
+    htmlContent: conteudoEmail
+  };
+
+  try {
+    console.log("📤 Tentando enviar e-mail...");
+    const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
+    console.log("✅ Resposta da Brevo:", JSON.stringify(response, null, 2));
+    return response;
+  } catch (error) {
+    console.error("❌ Erro ao enviar e-mail:", error.response?.data || error.message);
+    throw new Error("Erro ao enviar e-mail");
   }
-  
+}
 
 // 📌 Rota para verificar se o servidor está rodando
 app.get("/", (req, res) => {
@@ -107,7 +103,7 @@ app.post("/enviar-email-cotacao", async (req, res) => {
   }
 });
 
-// 📌 Iniciar o servidor
+// 📌 Iniciar o servidor (🔥 REMOVEMOS A SEGUNDA CHAMADA)
 app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
 });
