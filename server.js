@@ -5,33 +5,38 @@ const bodyParser = require("body-parser");
 require("dotenv").config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
+const HOST = "0.0.0.0"; // Permite conexões externas
 
-const HOST = '0.0.0.0';
-// 📌 Middleware
+// Middleware
 app.use(cors({ origin: "*", methods: ["GET", "POST"], allowedHeaders: ["Content-Type"] }));
 app.use(bodyParser.json());
 
-// 📌 Configuração do Brevo (Sendinblue)
+// Configuração da API da Brevo (Sendinblue)
 let defaultClient = SibApiV3Sdk.ApiClient.instance;
 let apiKey = defaultClient.authentications["api-key"];
-apiKey.apiKey = process.env.BREVO_API_KEY;
+apiKey.apiKey = process.env.BREVO_API_KEY || ""; // Garante que a API key está sendo carregada
 
 const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
 // 📌 Função para enviar e-mails
 async function enviarEmail(assunto, conteudoEmail) {
+  const remetente = process.env.SMTP_EMAIL || "remetente@exemplo.com"; // Evita valores indefinidos
+  const destinatario = "atendimento@altimuscorretora.com.br"; // E-mail fixo de destino
+
   const sendSmtpEmail = {
-    sender: { email: process.env.SMTP_EMAIL, name: "Altimus Corretora" },
-    to: [{ email: "atendimento@altimuscorretora.com.br" }], 
+    sender: { email: remetente, name: "Altimus Corretora" },
+    to: [{ email: destinatario }],
     subject: assunto,
     htmlContent: conteudoEmail
   };
 
   try {
     console.log("📤 Tentando enviar e-mail...");
+    console.log("📧 Dados do e-mail:", JSON.stringify(sendSmtpEmail, null, 2));
+
     const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
-    console.log("✅ Resposta da Brevo:", JSON.stringify(response, null, 2));
+    console.log("✅ E-mail enviado com sucesso!", JSON.stringify(response, null, 2));
     return response;
   } catch (error) {
     console.error("❌ Erro ao enviar e-mail:", error.response?.data || error.message);
@@ -104,8 +109,7 @@ app.post("/enviar-email-cotacao", async (req, res) => {
   }
 });
 
-// 📌 Iniciar o servidor (🔥 REMOVEMOS A SEGUNDA CHAMADA)
-app.listen(PORT, () => {
-    console.log(`🚀 Servidor rodando em ${HOST}`);
-  });
-  
+// 📌 Iniciar o servidor
+app.listen(PORT, HOST, () => {
+  console.log(`🚀 Servidor rodando em http://${HOST}:${PORT}`);
+});
