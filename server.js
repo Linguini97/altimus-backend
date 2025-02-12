@@ -5,7 +5,8 @@ const bodyParser = require("body-parser");
 require("dotenv").config();
 
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
+const HOST = process.env.RAILWAY_PUBLIC_DOMAIN || `http://localhost:${PORT}`;
 // 📌 Middleware
 app.use(cors({ origin: "*", methods: ["GET", "POST"], allowedHeaders: ["Content-Type"] }));
 app.use(bodyParser.json());
@@ -104,5 +105,6 @@ app.post("/enviar-email-cotacao", async (req, res) => {
 
 // 📌 Iniciar o servidor (🔥 REMOVEMOS A SEGUNDA CHAMADA)
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
-});
+    console.log(`🚀 Servidor rodando em ${HOST}`);
+  });
+  
