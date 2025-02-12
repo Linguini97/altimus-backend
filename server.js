@@ -2,8 +2,7 @@ const express = require("express");
 const SibApiV3Sdk = require("sib-api-v3-sdk");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-require("dotenv").config({ path: "./.env" });
-console.log("🔍 Variáveis carregadas diretamente do .env:", process.env);
+
 
 
 const app = express();
@@ -21,12 +20,20 @@ console.log(process.env);
 console.log("🟢 BREVO_API_KEY:", process.env.BREVO_API_KEY ? "Carregada ✅" : "❌ NÃO CARREGADA!");
 console.log("🟢 SMTP_EMAIL:", process.env.SMTP_EMAIL ? process.env.SMTP_EMAIL : "❌ NÃO CARREGADO!");
 console.log("📜 TODAS AS VARIÁVEIS DO PROCESS.ENV:", process.env);
+console.log("🔍 TODAS AS VARIÁVEIS DE AMBIENTE DISPONÍVEIS NO RAILWAY:");
+console.log(JSON.stringify(process.env, null, 2));
+
 
 
 // Configuração da API da Brevo (Sendinblue)
 let defaultClient = SibApiV3Sdk.ApiClient.instance;
-let apiKey = defaultClient.authentications["api-key"];
-apiKey.apiKey = process.env.BREVO_API_KEY || "";
+const apiKey = process.env.BREVO_API_KEY;
+if (!apiKey) {
+  console.error("❌ ERRO: A variável BREVO_API_KEY não está definida!");
+} else {
+  console.log("✅ BREVO_API_KEY carregada com sucesso!");
+}
+defaultClient.authentications["api-key"].apiKey = apiKey;
 
 const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
@@ -34,7 +41,6 @@ const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 async function enviarEmail(assunto, conteudoEmail) {
   console.log("🔍 Verificando chave da API antes do envio...");
   console.log("🟢 Chave da API usada:", process.env.BREVO_API_KEY);
-ddd
   const remetente = process.env.SMTP_EMAIL || "remetente@exemplo.com";
   const destinatario = "atendimento@altimuscorretora.com.br";
 
