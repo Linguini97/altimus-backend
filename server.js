@@ -28,7 +28,7 @@ const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 async function enviarEmail(assunto, conteudoEmail) {
   console.log("🔍 Verificando chave da API antes do envio...");
   console.log("🟢 Chave da API usada:", process.env.BREVO_API_KEY);
-
+ddd
   const remetente = process.env.SMTP_EMAIL || "remetente@exemplo.com";
   const destinatario = "atendimento@altimuscorretora.com.br";
 
