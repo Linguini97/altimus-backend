@@ -2,7 +2,9 @@ const express = require("express");
 const SibApiV3Sdk = require("sib-api-v3-sdk");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-require("dotenv").config();
+require("dotenv").config({ path: "./.env" });
+console.log("🔍 Variáveis carregadas diretamente do .env:", process.env);
+
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -16,6 +18,8 @@ app.use(bodyParser.json());
 console.log("🔍 Verificando variáveis de ambiente...");
 console.log("🟢 BREVO_API_KEY:", process.env.BREVO_API_KEY ? "Carregada ✅" : "❌ NÃO CARREGADA!");
 console.log("🟢 SMTP_EMAIL:", process.env.SMTP_EMAIL ? process.env.SMTP_EMAIL : "❌ NÃO CARREGADO!");
+console.log("📜 TODAS AS VARIÁVEIS DO PROCESS.ENV:", process.env);
+
 
 // Configuração da API da Brevo (Sendinblue)
 let defaultClient = SibApiV3Sdk.ApiClient.instance;
