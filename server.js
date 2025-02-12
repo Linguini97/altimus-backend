@@ -24,8 +24,11 @@ apiKey.apiKey = process.env.BREVO_API_KEY || "";
 
 const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
-// 📌 Função para enviar e-mails
+// 📌 Função para enviar e-mails com logs detalhados
 async function enviarEmail(assunto, conteudoEmail) {
+  console.log("🔍 Verificando chave da API antes do envio...");
+  console.log("🟢 Chave da API usada:", process.env.BREVO_API_KEY ? "Carregada ✅" : "❌ NÃO ENCONTRADA");
+
   const remetente = process.env.SMTP_EMAIL || "remetente@exemplo.com"; // Evita valores indefinidos
   const destinatario = "atendimento@altimuscorretora.com.br"; // E-mail fixo de destino
 
@@ -119,4 +122,3 @@ app.post("/enviar-email-cotacao", async (req, res) => {
 app.listen(PORT, HOST, () => {
   console.log(`🚀 Servidor rodando em http://${HOST}:${PORT}`);
 });
-
