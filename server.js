@@ -6,7 +6,8 @@ require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const HOST = process.env.RAILWAY_PUBLIC_DOMAIN || `http://localhost:${PORT}`;
+
+const HOST = '0.0.0.0';
 // 📌 Middleware
 app.use(cors({ origin: "*", methods: ["GET", "POST"], allowedHeaders: ["Content-Type"] }));
 app.use(bodyParser.json());
