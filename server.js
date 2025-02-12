@@ -5,8 +5,7 @@ const bodyParser = require("body-parser");
 require("dotenv").config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-
+const PORT = process.env.PORT || 8080;
 // 📌 Middleware
 app.use(cors({ origin: "*", methods: ["GET", "POST"], allowedHeaders: ["Content-Type"] }));
 app.use(bodyParser.json());
