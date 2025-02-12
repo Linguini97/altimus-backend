@@ -12,10 +12,15 @@ const HOST = "0.0.0.0"; // Permite conexões externas
 app.use(cors({ origin: "*", methods: ["GET", "POST"], allowedHeaders: ["Content-Type"] }));
 app.use(bodyParser.json());
 
+// 📌 Exibir variáveis de ambiente carregadas
+console.log("🔍 Verificando variáveis de ambiente...");
+console.log("🟢 BREVO_API_KEY:", process.env.BREVO_API_KEY ? "Carregada ✅" : "❌ NÃO CARREGADA!");
+console.log("🟢 SMTP_EMAIL:", process.env.SMTP_EMAIL ? process.env.SMTP_EMAIL : "❌ NÃO CARREGADO!");
+
 // Configuração da API da Brevo (Sendinblue)
 let defaultClient = SibApiV3Sdk.ApiClient.instance;
 let apiKey = defaultClient.authentications["api-key"];
-apiKey.apiKey = process.env.BREVO_API_KEY || ""; // Garante que a API key está sendo carregada
+apiKey.apiKey = process.env.BREVO_API_KEY || "";
 
 const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
@@ -31,15 +36,16 @@ async function enviarEmail(assunto, conteudoEmail) {
     htmlContent: conteudoEmail
   };
 
-  try {
-    console.log("📤 Tentando enviar e-mail...");
-    console.log("📧 Dados do e-mail:", JSON.stringify(sendSmtpEmail, null, 2));
+  console.log("📤 Tentando enviar e-mail...");
+  console.log("📧 Dados do e-mail:", JSON.stringify(sendSmtpEmail, null, 2));
 
+  try {
     const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
     console.log("✅ E-mail enviado com sucesso!", JSON.stringify(response, null, 2));
     return response;
   } catch (error) {
     console.error("❌ Erro ao enviar e-mail:", error.response?.data || error.message);
+    console.error("🔴 Verifique se `BREVO_API_KEY` e `SMTP_EMAIL` estão corretos!");
     throw new Error("Erro ao enviar e-mail");
   }
 }
@@ -113,3 +119,4 @@ app.post("/enviar-email-cotacao", async (req, res) => {
 app.listen(PORT, HOST, () => {
   console.log(`🚀 Servidor rodando em http://${HOST}:${PORT}`);
 });
+
